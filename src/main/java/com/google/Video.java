@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** A class used to represent a video. */
-class Video {
+class Video implements Comparable<Video>{
 
   private final String title;
   private final String videoId;
@@ -29,5 +29,14 @@ class Video {
   /** Returns a readonly collection of the tags of the video. */
   List<String> getTags() {
     return tags;
+  }
+
+  /**
+   * Returns a comparison in lexicograpical order to this video.
+   */
+  @Override
+  public int compareTo(Video vidToCompare)
+  {
+    return this.title.compareTo(vidToCompare.getTitle());
   }
 }

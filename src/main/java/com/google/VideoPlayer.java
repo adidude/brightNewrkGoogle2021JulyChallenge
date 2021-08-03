@@ -1,5 +1,8 @@
 package com.google;
 
+import java.util.Collections;
+import java.util.ArrayList;
+
 public class VideoPlayer {
 
   private final VideoLibrary videoLibrary;
@@ -13,7 +16,13 @@ public class VideoPlayer {
   }
 
   public void showAllVideos() {
-    System.out.println("showAllVideos needs implementation");
+    System.out.println("Here's a list of all available videos:");
+    ArrayList<Video> vidList = (ArrayList<Video>) videoLibrary.getVideos();
+    Collections.sort(vidList);
+    vidList.stream().forEach(vid -> 
+    {
+      System.out.println(vid.getTitle() + " (" + vid.getVideoId() + ") " + vid.getTags());
+    });
   }
 
   public void playVideo(String videoId) {
