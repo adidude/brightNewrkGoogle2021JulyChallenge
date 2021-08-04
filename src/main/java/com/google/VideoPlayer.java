@@ -2,6 +2,7 @@ package com.google;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class VideoPlayer {
 
@@ -17,6 +18,9 @@ public class VideoPlayer {
     System.out.printf("%s videos in the library%n", videoLibrary.getVideos().size());
   }
 
+/**
+ * Shows all the videos in the library.
+ */
   public void showAllVideos() {
     System.out.println("Here's a list of all available videos:");
     List<Video> vidList = videoLibrary.getVideos();
@@ -45,6 +49,10 @@ public class VideoPlayer {
     });
   }
 
+  /**
+   * Plays video as well as informs user of video being stopped and stared.
+   * @param videoId Is the ID of the video to play
+   */
   public void playVideo(String videoId) {
     Video identifiedVid = this.videoLibrary.getVideo(videoId);
     if(identifiedVid == null)
@@ -64,12 +72,20 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * 
+   */
   public void stopVideo() {
     System.out.println("stopVideo needs implementation");
   }
 
   public void playRandomVideo() {
-    System.out.println("playRandomVideo needs implementation");
+    List<Video> videos = this.videoLibrary.getVideos();
+    int noOfVids = videos.size();
+    Random generator = new Random();
+    int randomVid = generator.nextInt(noOfVids);
+    String vidID = videos.get(randomVid).getVideoId();
+    playVideo(vidID);
   }
 
   public void pauseVideo() {
