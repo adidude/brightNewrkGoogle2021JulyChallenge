@@ -5,15 +5,24 @@ import java.util.List;
 import java.util.Random;
 
 public class VideoPlayer {
-
+  
   private final VideoLibrary videoLibrary;
+  // Stores the currently playing video
   private String currVid;
+  private boolean isPaused;
 
+  /**
+   * VideoPlayer default Constructor
+   */
   public VideoPlayer() {
     this.videoLibrary = new VideoLibrary();
     this.currVid = "";
+    this.isPaused = true;
   }
 
+  /**
+   * Prints number of videos in the videoLibrary.
+   */
   public void numberOfVideos() {
     System.out.printf("%s videos in the library%n", videoLibrary.getVideos().size());
   }
@@ -23,13 +32,16 @@ public class VideoPlayer {
  */
   public void showAllVideos() {
     System.out.println("Here's a list of all available videos:");
+    // Get videos as a list and sort lexicographically
     List<Video> vidList = videoLibrary.getVideos();
     Collections.sort(vidList);
+    // Stream to loop through videos.
     vidList.stream().forEach(vid -> 
     {
       System.out.print(vid.getTitle() + " (" + vid.getVideoId() + ") [");
       List<String> tags = vid.getTags();
       int tagLen = tags.size();
+      // If there are tags loop through the list of tags and print.
       if(tagLen > 0)
       {
         for(int i = 0;i < tagLen; i++)
@@ -67,18 +79,30 @@ public class VideoPlayer {
     }
     else
     {
+      // Occurs when no video is currently playing.
       this.currVid = identifiedVid.getTitle();
       System.out.println("Playing video: " + this.currVid);
     }
   }
 
   /**
-   * 
+   * Stops currently playing video
    */
   public void stopVideo() {
-    System.out.println("stopVideo needs implementation");
+    if(this.currVid != "")
+    {
+      System.out.println("Stopping video: " + this.currVid);
+      this.currVid = "";
+    }
+    else
+    {
+      System.out.println("Cannot stop video: No video is currently playing");
+    }
   }
 
+  /**
+   * Plays a random video
+   */
   public void playRandomVideo() {
     List<Video> videos = this.videoLibrary.getVideos();
     int noOfVids = videos.size();
@@ -88,6 +112,9 @@ public class VideoPlayer {
     playVideo(vidID);
   }
 
+  /**
+   * Pauses a video
+   */
   public void pauseVideo() {
     System.out.println("pauseVideo needs implementation");
   }
