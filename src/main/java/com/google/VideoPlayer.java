@@ -1,14 +1,17 @@
 package com.google;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.ArrayList;
 
 public class VideoPlayer {
 
   private final VideoLibrary videoLibrary;
+  private String currVid;
 
   public VideoPlayer() {
     this.videoLibrary = new VideoLibrary();
+    this.currVid = "";
   }
 
   public void numberOfVideos() {
@@ -21,12 +24,45 @@ public class VideoPlayer {
     Collections.sort(vidList);
     vidList.stream().forEach(vid -> 
     {
-      System.out.println(vid.getTitle() + " (" + vid.getVideoId() + ") " + vid.getTags());
+      System.out.print(vid.getTitle() + " (" + vid.getVideoId() + ") [");
+      List<String> tags = vid.getTags();
+      int tagLen = tags.size();
+      if(tagLen > 0)
+      {
+        for(int i = 0;i < tagLen; i++)
+        {
+          if(i != tagLen-1)
+          {
+            System.out.print(tags.get(i) + " ");
+          }
+          else
+          {
+            System.out.print(tags.get(i));
+          }
+        }
+      }
+      System.out.println(']');
+
     });
   }
 
   public void playVideo(String videoId) {
-    System.out.println("playVideo needs implementation");
+    Video identifiedVid = this.videoLibrary.getVideo(videoId);
+    if(identifiedVid == null)
+    {
+      System.out.println("Cannot play video: Video does not exist");
+    }
+    else if(this.currVid != "")
+    {
+      System.out.println("Stopping video: " + this.currVid);
+      this.currVid = identifiedVid.getTitle();
+      System.out.println("Playing video: " + this.currVid);
+    }
+    else
+    {
+      this.currVid = identifiedVid.getTitle();
+      System.out.println("Playing video: " + this.currVid);
+    }
   }
 
   public void stopVideo() {

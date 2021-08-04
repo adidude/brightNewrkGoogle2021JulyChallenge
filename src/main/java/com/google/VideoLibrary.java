@@ -36,6 +36,8 @@ class VideoLibrary {
         }
         this.videos.put(id, new Video(title, id, tags));
       }
+      // Added close function to fix memory leak.
+      scanner.close();
     } catch (FileNotFoundException e) {
       System.out.println("Couldn't find videos.txt");
       e.printStackTrace();
