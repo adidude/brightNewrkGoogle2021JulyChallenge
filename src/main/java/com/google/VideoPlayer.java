@@ -8,7 +8,7 @@ public class VideoPlayer {
   
   private final VideoLibrary videoLibrary;
   // Stores the currently playing video
-  private String currVid;
+  private Video currVid;
   private boolean isPaused;
 
   /**
@@ -16,7 +16,6 @@ public class VideoPlayer {
    */
   public VideoPlayer() {
     this.videoLibrary = new VideoLibrary();
-    this.currVid = "";
     // isPaused is false because video has not been paused.
     this.isPaused = false;
   }
@@ -28,9 +27,9 @@ public class VideoPlayer {
     System.out.printf("%s videos in the library%n", videoLibrary.getVideos().size());
   }
 
-/**
- * Shows all the videos in the library.
- */
+  /**
+  * Shows all the videos in the library.
+  */
   public void showAllVideos() {
     System.out.println("Here's a list of all available videos:");
     // Get videos as a list and sort lexicographically
@@ -39,7 +38,19 @@ public class VideoPlayer {
     // Stream to loop through videos.
     vidList.stream().forEach(vid -> 
     {
-      System.out.print(vid.getTitle() + " (" + vid.getVideoId() + ") [");
+      printVideoDetails(vid);
+      // Seperates lines into new lines.
+      System.out.println();
+    });
+  }
+
+  /**
+   * Will print the video's details.
+   * @param vid The video to be printed.
+   */
+  public void printVideoDetails(Video vid)
+  {
+    System.out.print(vid.getTitle() + " (" + vid.getVideoId() + ") [");
       List<String> tags = vid.getTags();
       int tagLen = tags.size();
       // If there are tags loop through the list of tags and print.
@@ -57,9 +68,7 @@ public class VideoPlayer {
           }
         }
       }
-      System.out.println(']');
-
-    });
+      System.out.print(']');
   }
 
   /**
@@ -72,19 +81,20 @@ public class VideoPlayer {
     {
       System.out.println("Cannot play video: Video does not exist");
     }
-    else if(this.currVid != "")
+    else if(this.currVid != null)
     {
-      System.out.println("Stopping video: " + this.currVid);
-      this.currVid = identifiedVid.getTitle();
+      System.out.println("Stopping video: " + this.currVid.getTitle());
+      // Set the identified video as the current video.
+      this.currVid = identifiedVid;
       // song is no longer paused and starts playing if paused.
       this.isPaused = false;
-      System.out.println("Playing video: " + this.currVid);
+      System.out.println("Playing video: " + this.currVid.getTitle());
     }
     else
     {
       // Occurs when no video is currently playing.
-      this.currVid = identifiedVid.getTitle();
-      System.out.println("Playing video: " + this.currVid);
+      this.currVid = identifiedVid;
+      System.out.println("Playing video: " + this.currVid.getTitle());
     }
   }
 
@@ -92,10 +102,10 @@ public class VideoPlayer {
    * Stops currently playing video
    */
   public void stopVideo() {
-    if(this.currVid != "")
+    if(this.currVid != null)
     {
-      System.out.println("Stopping video: " + this.currVid);
-      this.currVid = "";
+      System.out.println("Stopping video: " + this.currVid.getTitle());
+      this.currVid = null;
     }
     else
     {
@@ -119,30 +129,33 @@ public class VideoPlayer {
    * Pauses a video
    */
   public void pauseVideo() {
-    if(this.currVid == "")
+    if(this.currVid == null)
     {
       System.out.println("Cannot pause video: No video is currently playing");
     }
     else if(this.isPaused)
     {
-      System.out.println("Video already paused: " + this.currVid);
+      System.out.println("Video already paused: " + this.currVid.getTitle());
     }
     else
     {
       this.isPaused = true;
-      System.out.println("Pausing video: " + this.currVid);
+      System.out.println("Pausing video: " + this.currVid.getTitle());
     }
   }
 
+  /**
+   * Continues a paused video
+   */
   public void continueVideo() {
     // If no video is playing or selected.
-    if(this.currVid == "")
+    if(this.currVid == null)
     {
       System.out.println("Cannot continue video: No video is currently playing");
     }
     else if(this.isPaused)
     {
-      System.out.println("Continuing video: " + this.currVid);
+      System.out.println("Continuing video: " + this.currVid.getTitle());
       this.isPaused = false;
     }
     else
@@ -152,7 +165,19 @@ public class VideoPlayer {
   }
 
   public void showPlaying() {
-    System.out.println("showPlaying needs implementation");
+    if(this.currVid == null)
+    {
+      System.out.println("No video is currently playing");
+    }
+    else
+    {
+      System.out.print("Currently playing: ");
+      printVideoDetails(this.currVid);
+      if(this.isPaused)
+      {
+        System.out.println(" - PAUSED");
+      }
+    }
   }
 
   public void createPlaylist(String playlistName) {
