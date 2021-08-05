@@ -12,6 +12,7 @@ public class VideoPlayer {
   // Stores the currently playing video
   private Video currVid;
   private boolean isPaused;
+  // A hashmap of vectors with videos in them. For easy access and variable growth.
   private HashMap<String,Vector<Video>> playlists = new HashMap<String,Vector<Video>>();
 
   /**
@@ -158,6 +159,7 @@ public class VideoPlayer {
     }
     else if(this.isPaused)
     {
+      // Unpausing video
       System.out.println("Continuing video: " + this.currVid.getTitle());
       this.isPaused = false;
     }
@@ -167,6 +169,9 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Shows the currently playing video.
+   */
   public void showPlaying() {
     if(this.currVid == null)
     {
@@ -183,8 +188,21 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Creates a playlist
+   * @param playlistName The name of the playlist to create.
+   */
   public void createPlaylist(String playlistName) {
-    System.out.println("createPlaylist needs implementation");
+    // If the playlist does not exist
+    if(playlists.get(playlistName) == null)
+    {
+      playlists.put(playlistName,null);
+      System.out.println("Successfully created new playlist: " + playlistName);
+    }
+    else
+    {
+      System.out.println("Cannot create playlist: Playlist with that name already exists");
+    }
   }
 
   public void addVideoToPlaylist(String playlistName, String videoId) {
