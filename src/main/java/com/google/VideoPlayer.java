@@ -1,8 +1,10 @@
 package com.google;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 public class VideoPlayer {
   
@@ -10,6 +12,7 @@ public class VideoPlayer {
   // Stores the currently playing video
   private Video currVid;
   private boolean isPaused;
+  private HashMap<String,Vector<Video>> playlists = new HashMap<String,Vector<Video>>();
 
   /**
    * VideoPlayer default Constructor
