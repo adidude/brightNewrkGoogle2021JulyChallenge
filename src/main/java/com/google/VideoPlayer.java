@@ -17,6 +17,7 @@ public class VideoPlayer {
   public VideoPlayer() {
     this.videoLibrary = new VideoLibrary();
     this.currVid = "";
+    // isPaused is false because video has not been paused.
     this.isPaused = false;
   }
 
@@ -134,7 +135,20 @@ public class VideoPlayer {
   }
 
   public void continueVideo() {
-    System.out.println("continueVideo needs implementation");
+    // If no video is playing or selected.
+    if(this.currVid == "")
+    {
+      System.out.println("Cannot continue video: No video is currently playing");
+    }
+    else if(this.isPaused)
+    {
+      System.out.println("Continuing video: " + this.currVid);
+      this.isPaused = false;
+    }
+    else
+    {
+      System.out.println("Cannot continue video: Video is not paused");
+    }
   }
 
   public void showPlaying() {
