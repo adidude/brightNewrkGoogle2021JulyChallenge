@@ -3,9 +3,11 @@ package com.google;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import java.util.Scanner;
 
 public class VideoPlayer {
   
@@ -50,6 +52,7 @@ public class VideoPlayer {
     });
   }
 
+  //TODO: move this to Video.java
   /**
    * Will print the video's details.
    * @param vid The video to be printed.
@@ -384,8 +387,56 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Searches for videos
+   * @param searchTerm The term in the video title to search for
+   */
   public void searchVideos(String searchTerm) {
-    System.out.println("searchVideos needs implementation");
+    List<Video> vids = videoLibrary.getVideos();
+    String smallTerm = searchTerm.toLowerCase();
+    Iterator<Video> it = vids.iterator();
+
+    while(it.hasNext())
+    {
+      Video currVid = it.next();
+      if(!currVid.getTitle().toLowerCase().contains(smallTerm))
+      {
+        it.remove();
+      }
+    }
+    
+    if(vids.size() > 0)
+    {
+      System.out.println("Here are the results for " + searchTerm + ':');
+      int noOfVids = vids.size();
+      Collections.sort(vids);
+      for(int i = 0; i < noOfVids; i++)
+      {
+        System.out.print(i+1 + ") ");
+        printVideoDetails(vids.get(i));
+        System.out.println();
+      }
+      System.out.println("Would you like to play any of the above? If yes, specify the number of the video.\nIf your answer is not a valid number, we will assume it's a no.");
+      var scanner = new Scanner(System.in);
+      var option = scanner.nextLine();
+      scanner.close();
+      try
+      {
+        int number = Integer.parseInt(option) - 1;
+        if(number < noOfVids)
+        {
+          playVideo(vids.get(number).getVideoId());
+        }
+      }
+      catch(NumberFormatException ex)
+      {
+        System.out.println();
+      }
+    }
+    else
+    {
+      System.out.println("No search results for " + searchTerm);
+    }
   }
 
   public void searchVideosWithTag(String videoTag) {
