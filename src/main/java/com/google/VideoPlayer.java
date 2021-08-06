@@ -309,7 +309,6 @@ public class VideoPlayer {
    * @param videoId - Id of the video to remove
    */
   public void removeFromPlaylist(String playlistName, String videoId) {
-    // TODO: Optimize these conditionals
     String tempListName = playlistName.toLowerCase();
     if(playlists.get(tempListName) != null)
     {
@@ -493,12 +492,38 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Flags a video to prevent it from being played
+   * @param videoId ID of the video to flag.
+   */
   public void flagVideo(String videoId) {
-    System.out.println("flagVideo needs implementation");
+    flagVideo(videoId, "Not supplied");
   }
 
+  /**
+   * Flags a video to prevent it from being played
+   * @param videoId ID of the video to flag
+   * @param reason Reason for the flag
+   */
   public void flagVideo(String videoId, String reason) {
-    System.out.println("flagVideo needs implementation");
+    Video vidToFlag = videoLibrary.getVideo(videoId);
+    if(vidToFlag != null)
+    {
+      if(vidToFlag.getIsFlagged())
+      {
+        System.out.println("Cannot flag video: Video is already flagged");
+      }
+      else
+      {
+        vidToFlag.setFlagged(true);
+        vidToFlag.setFlagReason(reason);
+        System.out.println("Successfully flagged video: " + vidToFlag.getTitle() + " (reason: " + reason + ')');
+      }      
+    }
+    else
+    {
+      System.out.println("Cannot flag video: Video does not exist");
+    }
   }
 
   public void allowVideo(String videoId) {
