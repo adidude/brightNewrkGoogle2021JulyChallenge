@@ -348,6 +348,10 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Removes all videos in a playlist.
+   * @param playlistName Name of the playlist to clear
+   */
   public void clearPlaylist(String playlistName) {
     String tempListName = playlistName.toLowerCase();
     Vector<Video> vids = playlists.get(tempListName);
@@ -362,8 +366,22 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Deletes a playlist
+   * @param playlistName The name of the playllst to be deleted.
+   */
   public void deletePlaylist(String playlistName) {
-    System.out.println("deletePlaylist needs implementation");
+    String tempListName = playlistName.toLowerCase();
+    if(playlists.get(tempListName) != null)
+    {
+      playlists.remove(tempListName);
+      playlistNames.remove(playlistName);
+      System.out.println("Deleted playlist: " + playlistName);
+    }
+    else
+    {
+      System.out.println("Cannot delete playlist " + playlistName + ": Playlist does not exist");
+    }
   }
 
   public void searchVideos(String searchTerm) {
