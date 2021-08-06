@@ -193,20 +193,57 @@ public class VideoPlayer {
    * @param playlistName The name of the playlist to create.
    */
   public void createPlaylist(String playlistName) {
+    // Playlist is made lowercase since it is not case sensitive.
+    String tempPlaylistName = playlistName.toLowerCase();
     // If the playlist does not exist
-    if(playlists.get(playlistName) == null)
+    if(playlists.get(tempPlaylistName) == null)
     {
-      playlists.put(playlistName,null);
+      playlists.put(tempPlaylistName,new Vector<Video>());
       System.out.println("Successfully created new playlist: " + playlistName);
     }
     else
     {
-      System.out.println("Cannot create playlist: Playlist with that name already exists");
+      System.out.println("Cannot create playlist: A playlist with the same name already exists");
     }
   }
 
+  /**
+   * Adds a video to a playlist.
+   * @param playlistName Name of the playlist to add to
+   * @param videoId ID of the video to add
+   */
   public void addVideoToPlaylist(String playlistName, String videoId) {
-    System.out.println("addVideoToPlaylist needs implementation");
+    String tempPlaylistName = playlistName.toLowerCase();
+    // Get the playlist and video associated with the input.
+    Vector<Video> currPlaylist = this.playlists.get(tempPlaylistName);
+    Video vidToAdd = videoLibrary.getVideo(videoId);
+    if(currPlaylist == null)
+    {
+      System.out.println("Cannot add video to " + playlistName + ": Playlist does not exist");
+    }
+    else if(vidToAdd == null)
+    {
+      System.out.println("Cannot add video to " + playlistName + ": Video does not exist");
+    }
+    else if(currPlaylist.contains(vidToAdd))
+    {
+      // If the video is already in the playlist display error
+      System.out.println("Cannot add video to " + playlistName + ": Video already added");
+    }
+    else
+    {
+      // Test if the video was successfully added to playlist and add it to global playlist
+      boolean isAdded = currPlaylist.add(vidToAdd);
+      if(isAdded)
+      {
+        this.playlists.put(tempPlaylistName,currPlaylist);
+        System.out.println("Added video to " + playlistName + ": " + vidToAdd.getTitle());
+      }
+      else
+      {
+        System.out.println("Cannot add video to " + playlistName + ": Failed to add video to playlist");
+      }
+    }
   }
 
   public void showAllPlaylists() {
