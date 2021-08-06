@@ -201,9 +201,8 @@ public class VideoPlayer {
     {
       // Add the playlist to the HashMap
       playlists.put(tempPlaylistName,new Vector<Video>());
-      // Name is added to a vector and sorted lexicograpically.
+      // Storing original playlist name
       playlistNames.add(playlistName);
-      Collections.sort(playlistNames);
       System.out.println("Successfully created new playlist: " + playlistName);
     }
     else
@@ -262,13 +261,43 @@ public class VideoPlayer {
     else
     {
       System.out.println("Showing all playlists:");
+      //Sort before printing playlists
+      Collections.sort(playlistNames);
       // Stream to print all playlists.
       playlistNames.stream().forEach(System.out::println);
     }
   }
 
+  /**
+   * Shows the playlist specified
+   * @param playlistName The name of the playlist.
+   */
   public void showPlaylist(String playlistName) {
-    System.out.println("showPlaylist needs implementation");
+    // Retrieve the playlist
+    Vector<Video> vids = playlists.get(playlistName.toLowerCase());
+    if(vids == null)
+    {
+      System.out.println("Cannot show playlist " + playlistName + ": Playlist does not exist");
+    }
+    else
+    {
+      System.out.println("Showing playlist: " + playlistName);
+      
+      if(vids.size() == 0)
+      {
+        System.out.println("No videos here yet");
+      }
+      else
+      {
+        // Print all values in vector.
+        vids.stream().forEach(vid -> {
+          printVideoDetails(vid);
+          System.out.println();
+        });
+      }
+    }
+    
+  
   }
 
   public void removeFromPlaylist(String playlistName, String videoId) {
