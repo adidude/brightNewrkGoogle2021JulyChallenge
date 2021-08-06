@@ -14,6 +14,7 @@ public class VideoPlayer {
   private boolean isPaused;
   // A hashmap of vectors with videos in them. For easy access and variable growth.
   private HashMap<String,Vector<Video>> playlists = new HashMap<String,Vector<Video>>();
+  private Vector<String> playlistNames = new Vector<String>();
 
   /**
    * VideoPlayer default Constructor
@@ -198,7 +199,11 @@ public class VideoPlayer {
     // If the playlist does not exist
     if(playlists.get(tempPlaylistName) == null)
     {
+      // Add the playlist to the HashMap
       playlists.put(tempPlaylistName,new Vector<Video>());
+      // Name is added to a vector and sorted lexicograpically.
+      playlistNames.add(playlistName);
+      Collections.sort(playlistNames);
       System.out.println("Successfully created new playlist: " + playlistName);
     }
     else
@@ -246,8 +251,20 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Shows all created playlists.
+   */
   public void showAllPlaylists() {
-    System.out.println("showAllPlaylists needs implementation");
+    if(playlists.size() == 0)
+    {
+      System.out.println("No playlists exist yet");
+    }
+    else
+    {
+      System.out.println("Showing all playlists:");
+      // Stream to print all playlists.
+      playlistNames.stream().forEach(System.out::println);
+    }
   }
 
   public void showPlaylist(String playlistName) {
