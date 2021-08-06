@@ -1,5 +1,6 @@
 package com.google;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -240,7 +241,6 @@ public class VideoPlayer {
       boolean isAdded = currPlaylist.add(vidToAdd);
       if(isAdded)
       {
-        this.playlists.put(tempPlaylistName,currPlaylist);
         System.out.println("Added video to " + playlistName + ": " + vidToAdd.getTitle());
       }
       else
@@ -300,12 +300,66 @@ public class VideoPlayer {
   
   }
 
+  /**
+   * Removes a video from a playlist.
+   * @param playlistName - Name of the playlist to remove
+   * @param videoId - Id of the video to remove
+   */
   public void removeFromPlaylist(String playlistName, String videoId) {
-    System.out.println("removeFromPlaylist needs implementation");
+    // TODO: Optimize these conditionals
+    String tempListName = playlistName.toLowerCase();
+    if(playlists.get(tempListName) != null)
+    {
+      if(videoLibrary.getVideo(videoId) != null)
+      {
+        Vector<Video> vids = playlists.get(tempListName);
+        int lenVids = vids.size();
+        boolean vidExists = false;
+        ArrayList<String> tempList = new ArrayList<String>();
+        Video vidToRemove = new Video("temp","tempID",tempList);
+
+        for(int i = 0; i < lenVids; i++)
+        {
+          vidToRemove = vids.get(i);
+          if(vidToRemove.getVideoId().equals(videoId))
+          {
+            vidExists = true;
+            System.out.println("Removed video from " + playlistName + ": " + vidToRemove.getTitle());
+            vids.remove(i);
+
+            // Exit loop
+            i = lenVids;
+          }
+        }
+
+        if(!vidExists)
+        {
+          System.out.println("Cannot remove video from " + playlistName + ": Video is not in playlist");
+        }
+      }
+      else
+      {
+        System.out.println("Cannot remove video from " + playlistName + ": Video does not exist");
+      }
+    }
+    else
+    {
+      System.out.println("Cannot remove video from " + playlistName + ": Playlist does not exist");
+    }
   }
 
   public void clearPlaylist(String playlistName) {
-    System.out.println("clearPlaylist needs implementation");
+    String tempListName = playlistName.toLowerCase();
+    Vector<Video> vids = playlists.get(tempListName);
+    if(vids == null)
+    {
+      System.out.println("Cannot clear playlist " + playlistName + ": Playlist does not exist");
+    }
+    else
+    {
+      System.out.println("Successfully removed all videos from " + playlistName);
+      vids.removeAllElements();
+    }
   }
 
   public void deletePlaylist(String playlistName) {
