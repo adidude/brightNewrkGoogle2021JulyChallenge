@@ -388,7 +388,7 @@ public class VideoPlayer {
   }
 
   /**
-   * Searches for videos
+   * Searches for videos by title
    * @param searchTerm The term in the video title to search for
    */
   public void searchVideos(String searchTerm) {
@@ -407,7 +407,23 @@ public class VideoPlayer {
     
     if(vids.size() > 0)
     {
-      System.out.println("Here are the results for " + searchTerm + ':');
+      // Displays results
+      displaySearchResults(searchTerm, vids);
+    }
+    else
+    {
+      System.out.println("No search results for " + searchTerm);
+    }
+  }
+
+  /**
+   * Displays results of a search
+   * @param searchTerm The tag or search string
+   * @param vids The list of videos satisfying the search
+   */
+  public void displaySearchResults(String searchTerm, List<Video> vids)
+  {
+    System.out.println("Here are the results for " + searchTerm + ':');
       int noOfVids = vids.size();
       Collections.sort(vids);
       for(int i = 0; i < noOfVids; i++)
@@ -432,15 +448,49 @@ public class VideoPlayer {
       {
         System.out.println();
       }
+  }
+
+  /**
+   * Searches for videos by tag
+   * @param videoTag Tag to search by
+   */
+  public void searchVideosWithTag(String videoTag) {
+    List<Video> vids = videoLibrary.getVideos();
+    String smallTag = videoTag.toLowerCase();
+    Iterator<Video> it = vids.iterator(); 
+
+    while(it.hasNext())
+    {
+      Video currVid = it.next();
+      List<String> allTags = currVid.getTags();
+      boolean hasTag = false;
+      int noOfTags = allTags.size();
+      
+      for(int i = 0 ;i < noOfTags; i++)
+      {
+        if(allTags.get(i).equals(smallTag))
+        {
+          hasTag = true;
+          i = noOfTags;
+        }
+      }
+
+      if(!hasTag)
+      {
+        it.remove();
+      }
+      
+    }
+    
+    if(vids.size() > 0)
+    {
+      // Displays results
+      displaySearchResults(videoTag, vids);
     }
     else
     {
-      System.out.println("No search results for " + searchTerm);
+      System.out.println("No search results for " + videoTag);
     }
-  }
-
-  public void searchVideosWithTag(String videoTag) {
-    System.out.println("searchVideosWithTag needs implementation");
   }
 
   public void flagVideo(String videoId) {
