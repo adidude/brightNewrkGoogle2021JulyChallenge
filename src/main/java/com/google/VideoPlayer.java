@@ -78,6 +78,11 @@ public class VideoPlayer {
         }
       }
       System.out.print(']');
+
+      if(vid.getIsFlagged())
+      {
+        System.out.print(" - FLAGGED (reason: " + vid.getFlagReason() + ')');
+      }
   }
 
   /**
@@ -90,7 +95,7 @@ public class VideoPlayer {
     {
       System.out.println("Cannot play video: Video does not exist");
     }
-    else if(this.currVid != null)
+    else if(this.currVid != null && !identifiedVid.getIsFlagged())
     {
       System.out.println("Stopping video: " + this.currVid.getTitle());
       // Set the identified video as the current video.
@@ -99,11 +104,15 @@ public class VideoPlayer {
       this.isPaused = false;
       System.out.println("Playing video: " + this.currVid.getTitle());
     }
-    else
+    else if(!identifiedVid.getIsFlagged())
     {
       // Occurs when no video is currently playing.
       this.currVid = identifiedVid;
       System.out.println("Playing video: " + this.currVid.getTitle());
+    }
+    else
+    {
+      System.out.println("Cannot play video: Video is currently flagged (reason: " + identifiedVid.getFlagReason() + ')');
     }
   }
 
@@ -128,10 +137,32 @@ public class VideoPlayer {
   public void playRandomVideo() {
     List<Video> videos = this.videoLibrary.getVideos();
     int noOfVids = videos.size();
-    Random generator = new Random();
-    int randomVid = generator.nextInt(noOfVids);
-    String vidID = videos.get(randomVid).getVideoId();
-    playVideo(vidID);
+    
+    boolean areAllFlagged = true;
+    ArrayList<Video> unflaggedVids = new ArrayList<Video>();
+
+    for(int i = 0; i < noOfVids; i++)
+    {
+      Video currVid = videos.get(i);
+      if(!currVid.getIsFlagged())
+      {
+        areAllFlagged = false;
+        unflaggedVids.add(currVid);
+      }
+    }
+
+    if(areAllFlagged)
+    {
+      System.out.println("No videos available");
+    }
+    else
+    {
+      Random generator = new Random();
+      int randomVid = generator.nextInt(unflaggedVids.size());
+      String vidID = unflaggedVids.get(randomVid).getVideoId();
+      playVideo(vidID);
+    }
+    
   }
 
   /**
@@ -233,12 +264,12 @@ public class VideoPlayer {
     {
       System.out.println("Cannot add video to " + playlistName + ": Video does not exist");
     }
-    else if(currPlaylist.contains(vidToAdd))
+    else if(currPlaylist.contains(vidToAdd) && !vidToAdd.getIsFlagged())
     {
       // If the video is already in the playlist display error
       System.out.println("Cannot add video to " + playlistName + ": Video already added");
     }
-    else
+    else if(!vidToAdd.getIsFlagged())
     {
       // Test if the video was successfully added to playlist and add it to global playlist
       boolean isAdded = currPlaylist.add(vidToAdd);
@@ -250,6 +281,10 @@ public class VideoPlayer {
       {
         System.out.println("Cannot add video to " + playlistName + ": Failed to add video to playlist");
       }
+    }
+    else
+    {
+      System.out.println("Cannot add video to " + playlistName + ": Video is currently flagged (reason: " + vidToAdd.getFlagReason() + ')');
     }
   }
 
@@ -398,7 +433,7 @@ public class VideoPlayer {
     while(it.hasNext())
     {
       Video currVid = it.next();
-      if(!currVid.getTitle().toLowerCase().contains(smallTerm))
+      if(!currVid.getTitle().toLowerCase().contains(smallTerm) || currVid.getIsFlagged())
       {
         it.remove();
       }
@@ -465,12 +500,15 @@ public class VideoPlayer {
       boolean hasTag = false;
       int noOfTags = allTags.size();
       
-      for(int i = 0 ;i < noOfTags; i++)
+      if(!currVid.getIsFlagged())
       {
-        if(allTags.get(i).equals(smallTag))
+        for(int i = 0 ;i < noOfTags; i++)
         {
-          hasTag = true;
-          i = noOfTags;
+          if(allTags.get(i).equals(smallTag))
+          {
+            hasTag = true;
+            i = noOfTags;
+          }
         }
       }
 
@@ -517,6 +555,12 @@ public class VideoPlayer {
       {
         vidToFlag.setFlagged(true);
         vidToFlag.setFlagReason(reason);
+        
+        if(vidToFlag.equals(this.currVid))
+        {
+          stopVideo();
+        }
+        
         System.out.println("Successfully flagged video: " + vidToFlag.getTitle() + " (reason: " + reason + ')');
       }      
     }
