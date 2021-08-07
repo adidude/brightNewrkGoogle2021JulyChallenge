@@ -570,7 +570,26 @@ public class VideoPlayer {
     }
   }
 
+  /**
+   * Unflags a flagged video
+   * @param videoId The ID of the video to unflag
+   */
   public void allowVideo(String videoId) {
-    System.out.println("allowVideo needs implementation");
+    Video vidToUnflag = videoLibrary.getVideo(videoId);
+    
+    if(vidToUnflag == null)
+    {
+      System.out.println("Cannot remove flag from video: Video does not exist");
+    }
+    else if(vidToUnflag.getIsFlagged())
+    {
+      vidToUnflag.setFlagged(false);
+      vidToUnflag.setFlagReason("");
+      System.out.println("Successfully removed flag from video: " + vidToUnflag.getTitle());
+    }
+    else
+    {
+      System.out.println("Cannot remove flag from video: Video is not flagged");
+   } 
   }
 }
